@@ -20,15 +20,27 @@ const getWeather = searchQuery => {
 										uvIndex(data);
 									});
 							});
-						
+
 						// get 5-day data
-						fiveDay();
+						getFiveDay(data.coord.lat, data.coord.lon)
+
 					});
 			} else {
 				alert("Failed to get data from API");
 			}
 		});
 };
+
+const getFiveDay = (lat, lon) => {
+	fetch("https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=current,minutely,hourly&units=imperial&appid=1433428c54ebfc06c679ee5966e161bb")
+		.then(function(response) {
+			response.json()
+				.then(function(data) {
+					fiveDay(data);
+				});
+		});
+};
+
 
 
 // Display weather data for today
@@ -40,7 +52,8 @@ const currentWeather = data => {
 	cardContentEl.id = "today-content"
 	const cardTitleEl = document.createElement("h4");
 	cardTitleEl.classList = "card-title";
-	cardTitleEl.textContent = data.name + " (" + moment().format("M/D/yyyy") + ")";
+	cardTitleEl.textContent = data.name + " (" + moment()
+		.format("M/D/yyyy") + ")";
 	const tempTextEl = document.createElement("p");
 	tempTextEl.classList = "text-secondary";
 	tempTextEl.textContent = "Temperature: " + data.main.temp + " °F";
@@ -51,7 +64,7 @@ const currentWeather = data => {
 	windTextEl.classList = "text-secondary";
 	windTextEl.textContent = "Wind Speed: " + data.wind.speed + " MPH";
 
-	
+
 	weatherContentEl.appendChild(weatherCardEl);
 	weatherCardEl.appendChild(cardContentEl);
 	cardContentEl.appendChild(cardTitleEl);
@@ -66,8 +79,9 @@ const uvIndex = data => {
 	const uvTextEl = document.createElement("p");
 	uvTextEl.classList = "text-secondary";
 	uvTextEl.innerHTML = "UV Index: <span class='badge bg-danger'>" + data.value + "</span>";
-	
-	document.querySelector("#today-content").appendChild(uvTextEl);
+
+	document.querySelector("#today-content")
+		.appendChild(uvTextEl);
 };
 
 // Display 5-day forcast
@@ -76,28 +90,30 @@ const fiveDay = data => {
 	fiveDayHeadingEl.textContent = "5-Day Forcast:"
 	const fiveDayRowEl = document.createElement("div");
 	fiveDayRowEl.classList = "row";
-	
+
 	weatherContentEl.appendChild(fiveDayHeadingEl);
 	weatherContentEl.appendChild(fiveDayRowEl);
-	
+
 	for (let i = 0; i < 5; i++) {
 		const columnEl = document.createElement("div");
-		columnEl.classList = "col";
+		columnEl.classList = "col-12 col-md p-1";
 		const cardEl = document.createElement("div");
 		cardEl.classList = "card bg-primary";
 		const cardContentEl = document.createElement("div");
 		cardContentEl.classList = "card-body";
-		
+
 		const dateEl = document.createElement("h5");
 		dateEl.classList = "text-white";
-		dateEl.textContent = moment().add(i + 1, "days").format("M/D/yyyy")
+		dateEl.textContent = moment()
+			.add(i + 1, "days")
+			.format("M/D/yyyy")
 		const tempTextEl = document.createElement("p");
 		tempTextEl.classList = "text-white";
-		tempTextEl.textContent = "Temp: " + placeholder + " °F";
+		tempTextEl.textContent = "Temp: " + data.daily[i + 1].temp.day + " °F";
 		const humidityTextEl = document.createElement("p");
 		humidityTextEl.classList = "text-white";
-		humidityTextEl.textContent = "Humidity: " + placeholder + "%";
-		
+		humidityTextEl.textContent = "Humidity: " + data.daily[i + 1].humidity + "%";
+
 		fiveDayRowEl.appendChild(columnEl);
 		columnEl.appendChild(cardEl);
 		cardEl.appendChild(cardContentEl);
@@ -105,12 +121,12 @@ const fiveDay = data => {
 		cardContentEl.appendChild(tempTextEl);
 		cardContentEl.appendChild(humidityTextEl);
 	}
-	
+
 };
 
 searchBtnEl.addEventListener("click", function() {
 	event.preventDefault();
-	
+
 	weatherContentEl.innerHTML = "";
 
 	const searchQuery = searchFieldEl.value;
