@@ -10,6 +10,15 @@ const getWeather = searchQuery => {
 				response.json()
 					.then(function(data) {
 						currentWeather(data);
+						// get UV data
+						fetch("http://api.openweathermap.org/data/2.5/uvi?lat=" + data.coord.lat + "&lon=" + data.coord.lon + "&appid=1433428c54ebfc06c679ee5966e161bb")
+							.then(function(response) {
+								response.json()
+									.then(function(data) {
+										uvIndex(data);
+									});
+							});
+						
 					});
 			} else {
 				alert("Failed to get data from API");
@@ -24,6 +33,7 @@ const currentWeather = data => {
 	weatherCard.classList = "card m-3";
 	const cardContentEl = document.createElement("div");
 	cardContentEl.classList = "card-body";
+	cardContentEl.id = "today-content"
 	const cardTitleEl = document.createElement("h5");
 	cardTitleEl.classList = "card-title";
 	cardTitleEl.textContent = data.name + " (" + moment().format("M/D/yyyy") + ")";
@@ -36,9 +46,7 @@ const currentWeather = data => {
 	const windTextEl = document.createElement("p");
 	windTextEl.classList = "text-secondary";
 	windTextEl.textContent = "Wind Speed: " + data.wind.speed + " MPH";
-	const uvTextEl = document.createElement("p");
-	uvTextEl.classList = "text-secondary";
-	uvTextEl.innerHTML = "UV Index <span class='badge bg-danger'>null</span>";
+
 	
 	weatherContentEl.appendChild(weatherCard);
 	weatherCard.appendChild(cardContentEl);
@@ -46,8 +54,17 @@ const currentWeather = data => {
 	cardContentEl.appendChild(tempTextEl);
 	cardContentEl.appendChild(humidityTextEl);
 	cardContentEl.appendChild(windTextEl);
-	cardContentEl.appendChild(uvTextEl);
-}
+
+};
+
+// Display UV index for today
+const uvIndex = data => {
+	const uvTextEl = document.createElement("p");
+	uvTextEl.classList = "text-secondary";
+	uvTextEl.innerHTML = "UV Index: <span class='badge bg-danger'>" + data.value + "</span>";
+	
+	document.querySelector("#today-content").appendChild(uvTextEl);
+};
 
 
 searchBtnEl.addEventListener("click", function() {
