@@ -1,8 +1,20 @@
 const searchFieldEl = document.querySelector("#search-field");
 const searchBtnEl = document.querySelector("#search-btn");
+const recentEl = document.querySelector("#recent-searches");
 const weatherContentEl = document.querySelector("#weather-content");
 
-const placeholder = "00";
+let recentArr = [];
+
+const pageLoad = function() {
+	loadThis = localStorage.getItem("recentQueries");
+	recentArr = JSON.parse(loadThis);
+	if (recentArr) {
+		recentSearches();
+	} else {
+		recentArr = [];
+		return;
+	}
+};
 
 // Get todays weather data based on search query
 const getWeather = searchQuery => {
@@ -20,10 +32,8 @@ const getWeather = searchQuery => {
 										uvIndex(data);
 									});
 							});
-
 						// get 5-day data
 						getFiveDay(data.coord.lat, data.coord.lon)
-
 					});
 			} else {
 				alert("Failed to get data from API");
@@ -41,10 +51,10 @@ const getFiveDay = (lat, lon) => {
 		});
 };
 
-
-
 // Display weather data for today
 const currentWeather = data => {
+	weatherContentEl.innerHTML = "";
+	
 	const weatherCardEl = document.createElement("div");
 	weatherCardEl.classList = "card mb-3";
 	const cardContentEl = document.createElement("div");
@@ -64,14 +74,12 @@ const currentWeather = data => {
 	windTextEl.classList = "text-secondary";
 	windTextEl.textContent = "Wind Speed: " + data.wind.speed + " MPH";
 
-
 	weatherContentEl.appendChild(weatherCardEl);
 	weatherCardEl.appendChild(cardContentEl);
 	cardContentEl.appendChild(cardTitleEl);
 	cardContentEl.appendChild(tempTextEl);
 	cardContentEl.appendChild(humidityTextEl);
 	cardContentEl.appendChild(windTextEl);
-
 };
 
 // Display UV index for today
@@ -121,16 +129,60 @@ const fiveDay = data => {
 		cardContentEl.appendChild(tempTextEl);
 		cardContentEl.appendChild(humidityTextEl);
 	}
-
 };
+
+// Add last query to recents, display in order of most recent, and save to localStorage
+const recentSearches = searchQuery => {
+	recentEl.innerHTML = "";
+	
+	if (searchQuery) {
+		recentArr.push(searchQuery);
+	}
+
+	if (recentArr.length > 5) {
+		recentArr.shift();
+	}
+	
+	recentArr.reverse();
+	
+	const listEl = document.createElement("ul");
+	listEl.classList = "list-group mt-3";
+	recentEl.appendChild(listEl);
+	
+	for (let i = 0; i < recentArr.length; i++) {
+		const listItemEl = document.createElement("li");
+		listItemEl.classList = "list-group-item list-group-item-action";
+		listItemEl.textContent = recentArr[i];
+		
+		listEl.appendChild(listItemEl);
+	}
+	
+	recentArr.reverse();
+	
+	const storeThis = JSON.stringify(recentArr);
+	
+	localStorage.setItem("recentQueries", storeThis);
+	
+};
+
+pageLoad();
 
 searchBtnEl.addEventListener("click", function() {
 	event.preventDefault();
-
-	weatherContentEl.innerHTML = "";
-
 	const searchQuery = searchFieldEl.value;
-
+	
+	if (!searchQuery) {
+		console.log("No input!");
+		return;
+	}
+	
+	searchFieldEl.value = "";
+	recentSearches(searchQuery);
 	getWeather(searchQuery);
-
 });
+
+recentEl.addEventListener("click", function() {
+	getWeather(event.target.textContent)	
+});
+
+

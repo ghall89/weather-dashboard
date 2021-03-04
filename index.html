@@ -10,38 +10,31 @@
 </head>
 
 <body>
-
 	<div class="bg-dark p-2">
 		<h1 class="text-center text-light">Weather Dashboard</h1>
 	</div>
 
 	<div class="container">
-
 		<div class="row">
 			<div class="col-md-3 bg-light p-2">
 				<h3>Search for City</h3>
 				<form>
 					<div class="row">
 						<div class="col-12 col-md-8">
-							<input class="form-control" id="search-field" type="text">
+							<input class="form-control" id="search-field" type="text" placeholder="City or ZIP">
 						</div>
 						<div class="col-12 col-md-2">
 							<button class="btn btn-primary" id="search-btn"><i class="fas fa-search"></i></button>
 						</div>
 					</div>
 				</form>
-
 				<div id="recent-searches"></div>
 			</div>
 			<div class="col-md-9 p-3">
 				<div id="weather-content"></div>
 			</div>
-
 		</div>
-
 	</div>
-
-
 	
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha512-qTXRIMyZIFb8iQcfjXWCO8+M5Tbc38Qi5WzdPOYZHIlZpzBHG3L3by84BBBOiRGiEb7KKtAOAs5qYdUiZiQNNQ==" crossorigin="anonymous"></script>
