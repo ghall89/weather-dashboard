@@ -18,14 +18,14 @@ const pageLoad = function() {
 
 // Get todays weather data based on search query
 const getWeather = searchQuery => {
-	fetch("http://api.openweathermap.org/data/2.5/weather?q=" + searchQuery + "&units=imperial&appid=1433428c54ebfc06c679ee5966e161bb")
+	fetch("https://api.openweathermap.org/data/2.5/weather?q=" + searchQuery + "&units=imperial&appid=1433428c54ebfc06c679ee5966e161bb")
 		.then(function(response) {
 			if (response.ok) {
 				response.json()
 					.then(function(data) {
 						currentWeather(data);
 						// get UV data
-						fetch("http://api.openweathermap.org/data/2.5/uvi?lat=" + data.coord.lat + "&lon=" + data.coord.lon + "&appid=1433428c54ebfc06c679ee5966e161bb")
+						fetch("https://api.openweathermap.org/data/2.5/uvi?lat=" + data.coord.lat + "&lon=" + data.coord.lon + "&appid=1433428c54ebfc06c679ee5966e161bb")
 							.then(function(response) {
 								response.json()
 									.then(function(data) {
@@ -66,7 +66,7 @@ const currentWeather = data => {
 	cardTitleEl.classList = "card-title";
 	cardTitleEl.textContent = data.name + " (" + moment().format("M/D/yyyy") + ") ";
 	const iconEl = document.createElement("img");
-	iconEl.setAttribute("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png")
+	iconEl.setAttribute("src", "https://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png")
 	const tempTextEl = document.createElement("p");
 	tempTextEl.classList = "text-secondary";
 	tempTextEl.textContent = "Temperature: " + data.main.temp + " °F";
@@ -129,7 +129,7 @@ const fiveDay = data => {
 			.add(i + 1, "days")
 			.format("M/D/yyyy")
 		const iconEl = document.createElement("img");
-		iconEl.setAttribute("src", "http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + ".png")
+		iconEl.setAttribute("src", "https://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + ".png")
 		const tempTextEl = document.createElement("p");
 		tempTextEl.classList = "text-white";
 		tempTextEl.textContent = "Temp: " + data.daily[i + 1].temp.day + " °F";
