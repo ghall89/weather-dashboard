@@ -90,10 +90,19 @@ const currentWeather = data => {
 const uvIndex = data => {
 	const uvTextEl = document.createElement("p");
 	uvTextEl.classList = "text-secondary";
-	uvTextEl.innerHTML = "UV Index: <span class='badge bg-danger'>" + data.value + "</span>";
+	uvTextEl.textContent = "UV Index: ";
+	const uvBadge = document.createElement("span");
+	uvBadge.textContent = data.value;
+	if (data.value >= 8) {
+		uvBadge.classList = "badge bg-danger"
+	} else if (data.value <= 2) {
+		uvBadge.classList = "badge bg-success"
+	} else {
+		uvBadge.classList = "badge bg-warning"
+	}
 
-	document.querySelector("#today-content")
-		.appendChild(uvTextEl);
+	document.querySelector("#today-content").appendChild(uvTextEl);
+	uvTextEl.appendChild(uvBadge);
 };
 
 // Display 5-day forcast
