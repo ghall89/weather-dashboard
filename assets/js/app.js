@@ -119,7 +119,7 @@ const fiveDay = data => {
 		const columnEl = document.createElement("div");
 		columnEl.classList = "col-12 col-md p-1";
 		const cardEl = document.createElement("div");
-		cardEl.classList = "card bg-primary";
+		cardEl.classList = "card bg-primary bg-gradient";
 		const cardContentEl = document.createElement("div");
 		cardContentEl.classList = "card-body";
 
