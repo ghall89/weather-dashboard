@@ -55,6 +55,8 @@ const getFiveDay = (lat, lon) => {
 const currentWeather = data => {
 	weatherContentEl.innerHTML = "";
 	
+	console.log(data);
+	
 	const weatherCardEl = document.createElement("div");
 	weatherCardEl.classList = "card mb-3";
 	const cardContentEl = document.createElement("div");
@@ -62,8 +64,9 @@ const currentWeather = data => {
 	cardContentEl.id = "today-content"
 	const cardTitleEl = document.createElement("h4");
 	cardTitleEl.classList = "card-title";
-	cardTitleEl.textContent = data.name + " (" + moment()
-		.format("M/D/yyyy") + ")";
+	cardTitleEl.textContent = data.name + " (" + moment().format("M/D/yyyy") + ") ";
+	const iconEl = document.createElement("img");
+	iconEl.setAttribute("src", "http://openweathermap.org/img/wn/" + data.weather[0].icon + "@2x.png")
 	const tempTextEl = document.createElement("p");
 	tempTextEl.classList = "text-secondary";
 	tempTextEl.textContent = "Temperature: " + data.main.temp + " °F";
@@ -77,6 +80,7 @@ const currentWeather = data => {
 	weatherContentEl.appendChild(weatherCardEl);
 	weatherCardEl.appendChild(cardContentEl);
 	cardContentEl.appendChild(cardTitleEl);
+	cardTitleEl.appendChild(iconEl);
 	cardContentEl.appendChild(tempTextEl);
 	cardContentEl.appendChild(humidityTextEl);
 	cardContentEl.appendChild(windTextEl);
@@ -115,6 +119,8 @@ const fiveDay = data => {
 		dateEl.textContent = moment()
 			.add(i + 1, "days")
 			.format("M/D/yyyy")
+		const iconEl = document.createElement("img");
+		iconEl.setAttribute("src", "http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + ".png")
 		const tempTextEl = document.createElement("p");
 		tempTextEl.classList = "text-white";
 		tempTextEl.textContent = "Temp: " + data.daily[i + 1].temp.day + " °F";
@@ -126,6 +132,7 @@ const fiveDay = data => {
 		columnEl.appendChild(cardEl);
 		cardEl.appendChild(cardContentEl);
 		cardContentEl.appendChild(dateEl);
+		cardContentEl.appendChild(iconEl);
 		cardContentEl.appendChild(tempTextEl);
 		cardContentEl.appendChild(humidityTextEl);
 	}
@@ -172,7 +179,8 @@ searchBtnEl.addEventListener("click", function() {
 	const searchQuery = searchFieldEl.value;
 	
 	if (!searchQuery) {
-		console.log("No input!");
+		alert("Please enter a city or ZIP");
+		searchFieldEl.focus();
 		return;
 	}
 	
